@@ -1,3 +1,4 @@
+package ubiproject;
 
 public class Main {
 
@@ -10,6 +11,7 @@ public class Main {
 		// New thread for RFID Reader
 		
 		//New thread for GUI
+		Gui();
 		
 	}
 
