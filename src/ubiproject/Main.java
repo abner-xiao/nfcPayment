@@ -1,4 +1,5 @@
 package ubiproject;
+import gui.Gui;
 
 public class Main {
 
@@ -11,7 +12,7 @@ public class Main {
 		// New thread for RFID Reader
 		
 		//New thread for GUI
-		Gui();
+		Gui graphicuserinterface = new Gui();
 		
 	}
 

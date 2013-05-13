@@ -3,5 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/home/clement/Bureau/KTH/ID2201/hsqldb-2.2.9/hsqldb/lib/hsqldb.jar"/>
+	<classpathentry kind="lib" path="/home/clement/eclipse/plugins/org.eclipse.swt.gtk.linux.x86_3.100.1.v4236b.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
