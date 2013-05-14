@@ -1,6 +1,7 @@
 package database;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 
 public class Database_Functions {
 	public void addUser(Database database,int rfid, int montant, String userfirstname, String userlastname){
@@ -21,6 +22,11 @@ public class Database_Functions {
 	}
 	public int getPrice (Database database, int id_provision){
 		return 0;
+	}
+	public ArrayList<String[]> getProvision (Database database){
+
+		// return toute la  base provision sous la forme [["Boisson 1","prix"],["Boisson 1","prix"],...,["Boisson N","prix"]]
+		return null;
 	}
 	public void addSale (Database database, Timestamp time, int terminal, int id_provision, int id_user){
 		//todo
