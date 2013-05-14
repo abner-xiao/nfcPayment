@@ -199,6 +199,7 @@ public class Gui {
 			Label lblPrix = new Label(pay_composite, SWT.NONE);
 			lblPrix.setText("Prix");
 			
+			@SuppressWarnings("unused")
 			Spinner spinner = new Spinner(pay_composite, SWT.BORDER);
 
 			
@@ -309,6 +310,7 @@ public class Gui {
 				public void mouseDoubleClick(MouseEvent e) {
 					int rfid = 1;//getRfid();
 					Vector<String> user = database.getUserFromRfid(String.valueOf(rfid));
+					System.out.println(user.toString());
 					text.setText(user.get(0));
 					text_2.setText(user.get(1));
 					text_1.setText(user.get(2));
