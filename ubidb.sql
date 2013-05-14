@@ -6,4 +6,4 @@ CREATE TABLE Users (
 )
 
 CREATE TABLE Conso (
-	time timestamp...
+	time timestamp

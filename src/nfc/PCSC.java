@@ -15,11 +15,15 @@ import javax.smartcardio.CommandAPDU;
 import javax.smartcardio.ResponseAPDU;
 import javax.smartcardio.TerminalFactory;
 
-public class PCSC {
+public class PCSC extends Thread{
         
         private byte[] atr = null;
         private String protocol = null;
         private byte[] historical = null;
+        
+        public PCSC() {
+        	
+        }
         
         public CardTerminal selectCardTerminal()
         {
@@ -174,7 +178,7 @@ public class PCSC {
         /**
          * @param args
          */
-        public static void main(String[] args) {
+        public void run() {
                 // TODO Auto-generated method stub
                 
                 PCSC pcsc = new PCSC();
@@ -212,5 +216,10 @@ public class PCSC {
                 result+= String.format("%02X", by);
             return result;
     }
+        
+        public int getUid() {
+        	return 0;
+        }
+        
 
 }

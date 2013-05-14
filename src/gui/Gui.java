@@ -2,6 +2,8 @@ package gui;
 
 import java.util.ResourceBundle.Control;
 
+import nfc.PCSC;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Shell;
@@ -36,12 +38,14 @@ public class Gui {
 	private Text text;
 	private Text text_1;
 	private Text text_2;
+	private PCSC pcsc;
 
 	/**
 	 * Launch the application.
 	 * @param args
 	 */
-	public Gui() {
+	public Gui(PCSC pcsc) {
+		this.pcsc = pcsc;
 		try {
 			this.open();
 		} catch (Exception e) {
@@ -327,7 +331,7 @@ public class Gui {
 			btnGetRfid.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDoubleClick(MouseEvent e) {
-					int rfid = getRfid();
+					int rfid = pcsc.getUid();
 					txtRfid.setText(String.valueOf(rfid));
 				}
 			});

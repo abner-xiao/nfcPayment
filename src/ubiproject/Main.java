@@ -1,4 +1,5 @@
 package ubiproject;
+import nfc.PCSC;
 import gui.Gui;
 
 public class Main {
@@ -10,9 +11,10 @@ public class Main {
 		// TODO Auto-generated method stub
 		System.out.println("Hello jacob");
 		// New thread for RFID Reader
-		
+		PCSC pcsc = new PCSC();
+		pcsc.start();
 		//New thread for GUI
-		Gui gui = new Gui();		
+		Gui gui = new Gui(pcsc);		
 	}
 
 }
