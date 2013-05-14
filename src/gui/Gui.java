@@ -83,7 +83,7 @@ public class Gui {
 
 		
 			System.out.println("Je suis Ici");
-			FormData show_home = new FormData();
+			final FormData show_home = new FormData();
 			show_home.top = new FormAttachment(0, 10);
 			show_home.left = new FormAttachment(0, 10);
 			final FormData hide_home = new FormData();
@@ -165,6 +165,7 @@ public class Gui {
 			new Label(add_new_user_composite, SWT.NONE);
 			
 			Button btnCreateUser = new Button(add_new_user_composite, SWT.NONE);
+
 			btnCreateUser.setText("Create User");
 			new Label(add_new_user_composite, SWT.NONE);
 			//////////////////////////////////////////////////////////////////////////////////				
@@ -198,6 +199,7 @@ public class Gui {
 			
 			Label lblBigtotal = new Label(pay_composite, SWT.NONE);
 			lblBigtotal.setText("BigTotal");
+			new Label(pay_composite, SWT.NONE);
 /////////////////////////////////////////////////////////////////////				
 			final FormData show_check = new FormData();
 			show_check.top = new FormAttachment(0, 10);
@@ -249,7 +251,11 @@ public class Gui {
 			stock_composite.setLayoutData(hide_stock);
 			
 		
-			////////////////////////////
+			///////////////////////////////////////////////////////////////
+			////                        EVENT HANDLER                   ///
+			///////////////////////////////////////////////////////////////
+			
+			/////For home /////
 			btnAdd.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDoubleClick(MouseEvent e) {
@@ -285,6 +291,44 @@ public class Gui {
 					stock_composite.setLayoutData(show_stock);
 					shell1.pack();
 
+				}
+			});
+			
+			
+			/////For add_user /////
+			
+			btnCreateUser.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseDoubleClick(MouseEvent e) {
+					//Je recupere les infos et j'utilise la fonction pour ajouter a la base
+					
+					String firstname = txtFirstnametextfield.getText();
+					String lastname = txtLastnametextfield.getText();
+					int montant = Integer.parseInt(txtMontant.getText());
+					int rfid = Integer.parseInt(txtRfid.getText());
+					
+					if (addUser(database,rfid,montant,firstname,lastname)){
+						
+						txtFirstnametextfield.setText(null);
+						txtLastnametextfield.setText(null);
+						txtMontant.setText(null);
+						txtRfid.setText(null);
+						home_composite.setLayoutData(show_home);
+						stock_composite.setLayoutData(hide_add);
+						shell1.pack();
+					}else{
+						System.out.println("Not possible to add a user now!! Try again later.");
+					}
+					
+					
+
+				}
+			});
+			btnGetRfid.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseDoubleClick(MouseEvent e) {
+					int rfid = getRfid();
+					txtRfid.setText(String.valueOf(rfid));
 				}
 			});
 
