@@ -308,8 +308,8 @@ public class Gui {
 			btnCheck.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDoubleClick(MouseEvent e) {
-					int rfid = 1;//getRfid();
-					Vector<String> user = database.getUserFromRfid("eeee");//String.valueOf(rfid));
+					int rfid = pcsc.getUid();
+					Vector<String> user = database.getUserFromRfid(String.valueOf(rfid));
 					System.out.println(user.toString());
 					text.setText(user.get(0));
 					text_2.setText(user.get(1));
@@ -402,7 +402,7 @@ public class Gui {
 
 	}
 
-	protected ArrayList<Object[]> createPayContent(Composite pay_composite) {
+	protected ArrayList<Object[]> createPayContent(final Composite pay_composite) {
 	// TODO Auto-generated method stub
 		//1 Acces database pour recuperer le tableau
 		ArrayList<String[]> data = database.getProvision();
@@ -442,7 +442,6 @@ public class Gui {
 		//// Create handlers for all the array list
 		final int listsize = list.size();
 		for (int i = listsize-2;i>=0;i--){
-			System.out.println("li : "+i);
 			final Object[] tab1 = list.get(i);
 			((Spinner) tab1[2]).addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent arg0) {
@@ -452,10 +451,6 @@ public class Gui {
 					((Text) tab1[3]).setText(String.valueOf(subtotal));
 					float total=0;
 					for (int j = listsize-2;j>=0;j--){
-						System.out.println("fl : "+j);
-						System.out.println(list.get(j).toString());
-						System.out.println("----");
-						System.out.println(list.get(j)[3].toString());
 						total = total + Float.parseFloat(((Text)list.get(j)[3]).getText());
 					}
 					((Text)list.get(listsize-1)[3]).setText(String.valueOf(total));			
@@ -463,16 +458,31 @@ public class Gui {
 				}
 			});
 			
-			((Button) list.get(listsize-1)[1]).addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseDoubleClick(MouseEvent e) {
-					// TODO Récuperer le rfid, vérifier si le mec a assez, soustraire au compte, ajouter un log dans la base.
-					System.out.println("Je viens de payer");
-				}
-			});
-			
 		}
-		
+		((Button) list.get(listsize-1)[1]).addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				// TODO Récuperer le rfid, vérifier si le mec a assez, soustraire au compte, ajouter un log dans la base.
+				
+				//rfid
+				int rfid = pcsc.getUid();
+				//Amount on the user account
+				float amount = database.getAmount(String.valueOf(rfid));
+				//Total à payer
+				float total =  Float.parseFloat(((Text) list.get(listsize-1)[3]).getText());
+				System.out.println("total : "+ total);
+				System.out.println("amount : "+amount);
+				
+				if (amount>=total && database.soustractAmount(String.valueOf(rfid), total)){
+					System.out.println("Payment OK!");
+					//add log
+					
+				}else{
+					System.out.println("You don't have enough money");
+					return;
+				}
+			}
+		});
 		
 		return list;	
 }

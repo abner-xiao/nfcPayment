@@ -91,7 +91,7 @@ public class Database_Functions {
 		try {
 			Statement s = connection.createStatement();
 			int result = 0;
-			result = s.executeUpdate("UPDATE User SET amount="+money+" WHERE id_user='"+id_user+"'");
+			result = s.executeUpdate("UPDATE Users SET amount="+money+" WHERE id_user='"+id_user+"'");
 			if (result > 0) return true; else return false;
 		}
 		catch (SQLException e) {
@@ -113,7 +113,7 @@ public class Database_Functions {
 			float amount = this.getAmount(id_user);
 			if (amount - money < 0) return false; //Check if there is enough money on the account
 			
-			result = s.executeUpdate("UPDATE User SET amount="+money+" WHERE id_user='"+id_user+"'");
+			result = s.executeUpdate("UPDATE Users SET amount="+money+" WHERE id_user='"+id_user+"'");
 			if (result > 0) return true; else return false;
 		}
 		catch (SQLException e) {
@@ -131,6 +131,7 @@ public class Database_Functions {
 		try {
 			Statement s = connection.createStatement();
 			ResultSet rs = s.executeQuery("SELECT amount FROM Users WHERE id_user='"+id_user+"'");
+			rs.next();
 			return rs.getFloat("amount");
 		}
 		catch (SQLException e) {

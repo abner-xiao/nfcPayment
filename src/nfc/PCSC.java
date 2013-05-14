@@ -218,7 +218,7 @@ public class PCSC extends Thread{
     }
         
         public int getUid() {
-        	return 0;
+        	return 2;
         }
         
 
