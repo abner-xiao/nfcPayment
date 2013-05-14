@@ -4,11 +4,18 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 public class Database_Functions {
-	public void addUser(Database database,int rfid, int montant, String userfirstname, String userlastname){
+	public void addUser(int rfid, int montant, String userfirstname, String userlastname){
 		//todO	
 	}
-	public void deleteUser (Database database, int rfid){
+	public void deleteUser (int rfid){
 		//todo
+	}
+	public String[] getUserFromRfid(int rfid){
+		String[] str = new String[3];
+		str[0] = "UserFirstname";
+		str[1] = "UserLastname";
+		str[2] = "montant";
+		return str;
 	}
 	public void addAmount (Database database, int rfid, int money){
 		// Dans le cas ou un utilisateur crédite son compte USERS.amount = USERS.amount + money

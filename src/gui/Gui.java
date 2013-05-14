@@ -22,6 +22,7 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
+import database.Database_Functions;
 
 
 
@@ -82,7 +83,7 @@ public class Gui {
  void createContents(final Composite composite, final Shell shell1) {
 
 		
-			System.out.println("Je suis Ici");
+
 			final FormData show_home = new FormData();
 			show_home.top = new FormAttachment(0, 10);
 			show_home.left = new FormAttachment(0, 10);
@@ -162,11 +163,13 @@ public class Gui {
 			
 			Button btnGetRfid = new Button(add_new_user_composite, SWT.NONE);
 			btnGetRfid.setText("Get RFID");
-			new Label(add_new_user_composite, SWT.NONE);
+			
+			Button btnGetBackHome = new Button(add_new_user_composite, SWT.NONE);
+			btnGetBackHome.setText("<< Back");
 			
 			Button btnCreateUser = new Button(add_new_user_composite, SWT.NONE);
-
 			btnCreateUser.setText("Create User");
+			
 			new Label(add_new_user_composite, SWT.NONE);
 			//////////////////////////////////////////////////////////////////////////////////				
 			final FormData show_pay = new FormData();
@@ -211,7 +214,7 @@ public class Gui {
 			hide_check.width = 0;
 	
 			final Composite check_composite = new Composite(composite, SWT.NONE);
-			check_composite.setLayout(new GridLayout(3, false));
+			check_composite.setLayout(new GridLayout(2, false));
 			check_composite.setLayoutData(hide_check);
 
 			Label label = new Label(check_composite, SWT.NONE);
@@ -237,6 +240,11 @@ public class Gui {
 			text_1 = new Text(check_composite, SWT.BORDER);
 			text_1.setText("Montant");
 			text_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			
+			Button btnGetBackHome_1 = new Button(check_composite, SWT.NONE);
+			btnGetBackHome_1.setText("<< Back");
+			
+			new Label(add_new_user_composite, SWT.NONE);
 //////////////////////////////////////////////////////////////////////			
 			final FormData show_stock = new FormData();
 			show_stock.top = new FormAttachment(0, 10);
@@ -278,6 +286,12 @@ public class Gui {
 			btnCheck.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDoubleClick(MouseEvent e) {
+					int rfid = 1;//getRfid();
+					String[] user = getUserFromRfid(rfid);
+					text.setText(user[0]);
+					text_2.setText(user[1]);
+					text_1.setText(user[2]);
+					
 					home_composite.setLayoutData(hide_home);
 					check_composite.setLayoutData(show_check);
 					shell1.pack();
@@ -307,12 +321,12 @@ public class Gui {
 					int montant = Integer.parseInt(txtMontant.getText());
 					int rfid = Integer.parseInt(txtRfid.getText());
 					
-					if (addUser(database,rfid,montant,firstname,lastname)){
+					if (addUser(rfid,montant,firstname,lastname)){
 						
-						txtFirstnametextfield.setText(null);
-						txtLastnametextfield.setText(null);
-						txtMontant.setText(null);
-						txtRfid.setText(null);
+						txtFirstnametextfield.setText("");
+						txtLastnametextfield.setText("");
+						txtMontant.setText("0");
+						txtRfid.setText("");
 						home_composite.setLayoutData(show_home);
 						stock_composite.setLayoutData(hide_add);
 						shell1.pack();
@@ -324,11 +338,41 @@ public class Gui {
 
 				}
 			});
+			
+			btnGetBackHome.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseDoubleClick(MouseEvent e) {
+					System.out.println("Je suis Ici");
+					txtFirstnametextfield.setText("");
+					txtLastnametextfield.setText("");
+					txtMontant.setText("0");
+					txtRfid.setText("");
+					System.out.println("Je suis Ici");
+					home_composite.setLayoutData(show_home);
+					add_new_user_composite.setLayoutData(hide_add);
+					shell1.pack();
+				}
+			});
+			
 			btnGetRfid.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDoubleClick(MouseEvent e) {
 					int rfid = getRfid();
 					txtRfid.setText(String.valueOf(rfid));
+				}
+			});
+			
+			
+			/////////For Check ////////
+			btnGetBackHome_1.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseDoubleClick(MouseEvent e) {
+					text.setText("");
+					text_2.setText("");
+					text_1.setText("0");
+					home_composite.setLayoutData(show_home);
+					check_composite.setLayoutData(hide_check);
+					shell1.pack();
 				}
 			});
 
