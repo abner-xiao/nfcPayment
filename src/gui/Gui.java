@@ -1,30 +1,29 @@
 package gui;
 
-import java.util.ResourceBundle.Control;
+import java.util.ArrayList;
+import java.util.Vector;
 
 import nfc.PCSC;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.layout.GridLayout;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.layout.GridData;
-import org.eclipse.swt.layout.RowLayout;
-import org.eclipse.swt.layout.RowData;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MenuItem;
-import org.eclipse.swt.widgets.Spinner;
-import org.eclipse.swt.layout.FormLayout;
-import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
-import database.*;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Spinner;
+import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.events.ModifyListener;
+import org.eclipse.swt.events.ModifyEvent;
 
 
 
@@ -35,6 +34,7 @@ public class Gui {
 	private Text txtLastnametextfield;
 	private Text txtMontant;
 	private Text txtRfid;
+	private Text txtSubTotal;
 	private Text txtTotal;
 	private Text text;
 	private Text text_1;
@@ -185,7 +185,7 @@ public class Gui {
 			hide_pay.width = 0;
 	
 			final Composite pay_composite = new Composite(composite, SWT.NONE);
-			pay_composite.setLayout(new GridLayout(3, false));
+			pay_composite.setLayout(new GridLayout(5, false));
 			pay_composite.setLayoutData(hide_pay);
 
 			Label lblBoisson = new Label(pay_composite, SWT.NONE);
@@ -195,16 +195,20 @@ public class Gui {
 			lblPrix.setText("Prix");
 			
 			Spinner spinner = new Spinner(pay_composite, SWT.BORDER);
+
 			
-			txtTotal = new Text(pay_composite, SWT.BORDER);
-			txtTotal.setText("total");
-			txtTotal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+			txtSubTotal = new Text(pay_composite, SWT.BORDER);
+			txtSubTotal.setText("total");
+			txtSubTotal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			new Label(pay_composite, SWT.NONE);
 			new Label(pay_composite, SWT.NONE);
 			new Label(pay_composite, SWT.NONE);
 			
 			Label lblBigtotal = new Label(pay_composite, SWT.NONE);
 			lblBigtotal.setText("BigTotal");
+			txtTotal = new Text(pay_composite, SWT.BORDER);
+			txtTotal.setText("total");
+			txtTotal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
 			new Label(pay_composite, SWT.NONE);
 /////////////////////////////////////////////////////////////////////				
 			final FormData show_check = new FormData();
@@ -246,7 +250,10 @@ public class Gui {
 			
 			Button btnGetBackHome_1 = new Button(check_composite, SWT.NONE);
 			btnGetBackHome_1.setText("<< Back");
+			new Label(check_composite, SWT.NONE);
 			
+			new Label(add_new_user_composite, SWT.NONE);
+			new Label(add_new_user_composite, SWT.NONE);
 			new Label(add_new_user_composite, SWT.NONE);
 //////////////////////////////////////////////////////////////////////			
 			final FormData show_stock = new FormData();
@@ -280,6 +287,12 @@ public class Gui {
 			btnPay.addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDoubleClick(MouseEvent e) {
+					Control[] children = pay_composite.getChildren();
+					int len = children.length;
+					for (int i=len; i>0;i--){
+						children[i].dispose();
+					}
+					createPayContent(pay_composite);
 					home_composite.setLayoutData(hide_home);
 					pay_composite.setLayoutData(show_pay);
 					shell1.pack();
@@ -380,6 +393,75 @@ public class Gui {
 			});
 
 	}
+
+	protected ArrayList<Object[]> createPayContent(Composite pay_composite) {
+	// TODO Auto-generated method stub
+		//1 Acces database pour recuperer le tableau
+		ArrayList<String[]> data = getProvision();
+		// 2 pour chaque tableau
+		int datasize = data.size();
+		final ArrayList<Object[]> list = new ArrayList<Object[]>();
+
+		for (int i=0;i<datasize;i++){
+			String[] provision = data.get(i); //provision[0] : boisson ; provision[1]: price;
+			Object[] tab =  new Object[4];
+			
+			tab[0] = new Label(pay_composite, SWT.NONE);
+			((Label) tab[0]).setText(provision[0]);
+			
+			tab[1] = new Label(pay_composite, SWT.NONE);
+			((Label) tab[1]).setText(provision[1]);
+			
+			tab[2] = new Spinner(pay_composite, SWT.BORDER);
+			
+			tab[3] = new Text(pay_composite, SWT.BORDER);
+			((Text) tab[3]).setText("total");
+			list.add(tab);	
+			
+		}
+		Object[] tab =  new Object[4];
+		
+		tab[0] = new Label(pay_composite, SWT.NONE);
+		tab[1] = new Button(pay_composite, SWT.NONE);
+		((Button) tab[1]).setText("PAY");
+		tab[2] =  new Label(pay_composite, SWT.NONE);
+		((Label) tab[2]).setText("Total");
+		tab[3] = new Text(pay_composite, SWT.BORDER);
+		((Text) tab[3]).setText("0");
+		list.add(tab);
+		
+		//// Create handlers for all the array list
+		final int listsize = list.size();
+		for (int i = listsize-2;i>=0;i--){
+			final Object[] tab1 = list.get(i);
+			((Spinner) tab1[2]).addModifyListener(new ModifyListener() {
+				public void modifyText(ModifyEvent arg0) {
+					int number = Integer.parseInt(((Spinner)tab1[2]).getText());
+					int price = Integer.parseInt(((Label)tab1[1]).getText());
+					int subtotal = number * price;
+					((Text) tab1[3]).setText(String.valueOf(subtotal));
+					int total=0;
+					for (int i = listsize-2;i>=0;i--){
+						total = total + Integer.parseInt(((Text)list.get(i)[3]).getText());
+					}
+					((Text)list.get(listsize)[3]).setText(String.valueOf(total));			
+					
+				}
+			});
+			
+			((Button) list.get(listsize)[1]).addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseDoubleClick(MouseEvent e) {
+					// TODO Récuperer le rfid, vérifier si le mec a assez, soustraire au compte, ajouter un log dans la base.
+					System.out.println("Je viens de payer");
+				}
+			});
+			
+		}
+		
+		
+		return list;	
+}
 
 	/**
 	 * Create contents of the window.
