@@ -190,9 +190,9 @@ public class Gui {
 			hide_pay.width = 0;
 	
 			final Composite pay_composite = new Composite(composite, SWT.NONE);
-			pay_composite.setLayout(new GridLayout(5, false));
+			pay_composite.setLayout(new GridLayout(4, false));
 			pay_composite.setLayoutData(hide_pay);
-
+			/*
 			Label lblBoisson = new Label(pay_composite, SWT.NONE);
 			lblBoisson.setText("Boisson");
 			
@@ -215,7 +215,7 @@ public class Gui {
 			txtTotal = new Text(pay_composite, SWT.BORDER);
 			txtTotal.setText("total");
 			txtTotal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			new Label(pay_composite, SWT.NONE);
+			new Label(pay_composite, SWT.NONE);*/
 /////////////////////////////////////////////////////////////////////				
 			final FormData show_check = new FormData();
 			show_check.top = new FormAttachment(0, 10);
@@ -295,7 +295,7 @@ public class Gui {
 				public void mouseDoubleClick(MouseEvent e) {
 					Control[] children = pay_composite.getChildren();
 					int len = children.length;
-					for (int i=len; i>0;i--){
+					for (int i=len-1; i>0;i--){
 						children[i].dispose();
 					}
 					createPayContent(pay_composite);
@@ -309,7 +309,7 @@ public class Gui {
 				@Override
 				public void mouseDoubleClick(MouseEvent e) {
 					int rfid = 1;//getRfid();
-					Vector<String> user = database.getUserFromRfid(String.valueOf(rfid));
+					Vector<String> user = database.getUserFromRfid("eeee");//String.valueOf(rfid));
 					System.out.println(user.toString());
 					text.setText(user.get(0));
 					text_2.setText(user.get(1));
@@ -411,6 +411,7 @@ public class Gui {
 		final ArrayList<Object[]> list = new ArrayList<Object[]>();
 
 		for (int i=0;i<datasize;i++){
+			System.out.println("ar : "+i);
 			String[] provision = data.get(i); //provision[0] : boisson ; provision[1]: price;
 			Object[] tab =  new Object[4];
 			
@@ -423,7 +424,7 @@ public class Gui {
 			tab[2] = new Spinner(pay_composite, SWT.BORDER);
 			
 			tab[3] = new Text(pay_composite, SWT.BORDER);
-			((Text) tab[3]).setText("total");
+			((Text) tab[3]).setText("0");
 			list.add(tab);	
 			
 		}
@@ -441,23 +442,28 @@ public class Gui {
 		//// Create handlers for all the array list
 		final int listsize = list.size();
 		for (int i = listsize-2;i>=0;i--){
+			System.out.println("li : "+i);
 			final Object[] tab1 = list.get(i);
 			((Spinner) tab1[2]).addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent arg0) {
 					int number = Integer.parseInt(((Spinner)tab1[2]).getText());
-					int price = Integer.parseInt(((Label)tab1[1]).getText());
-					int subtotal = number * price;
+					float price = Float.parseFloat(((Label)tab1[1]).getText());
+					float subtotal = (float)number * price;
 					((Text) tab1[3]).setText(String.valueOf(subtotal));
-					int total=0;
-					for (int i = listsize-2;i>=0;i--){
-						total = total + Integer.parseInt(((Text)list.get(i)[3]).getText());
+					float total=0;
+					for (int j = listsize-2;j>=0;j--){
+						System.out.println("fl : "+j);
+						System.out.println(list.get(j).toString());
+						System.out.println("----");
+						System.out.println(list.get(j)[3].toString());
+						total = total + Float.parseFloat(((Text)list.get(j)[3]).getText());
 					}
-					((Text)list.get(listsize)[3]).setText(String.valueOf(total));			
+					((Text)list.get(listsize-1)[3]).setText(String.valueOf(total));			
 					
 				}
 			});
 			
-			((Button) list.get(listsize)[1]).addMouseListener(new MouseAdapter() {
+			((Button) list.get(listsize-1)[1]).addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseDoubleClick(MouseEvent e) {
 					// TODO Récuperer le rfid, vérifier si le mec a assez, soustraire au compte, ajouter un log dans la base.
