@@ -24,7 +24,7 @@ import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormAttachment;
-import database.Database_Functions;
+import database.*;
 
 
 
@@ -40,7 +40,6 @@ public class Gui {
 	private Text text_1;
 	private Text text_2;
 	private PCSC pcsc;
-
 	/**
 	 * Launch the application.
 	 * @param args

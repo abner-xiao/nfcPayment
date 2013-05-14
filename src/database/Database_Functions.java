@@ -17,25 +17,25 @@ public class Database_Functions {
 		str[2] = "montant";
 		return str;
 	}
-	public void addAmount (Database database, int rfid, int money){
+	public void addAmount (int rfid, int money){
 		// Dans le cas ou un utilisateur crédite son compte USERS.amount = USERS.amount + money
 	}
-	public void soustractAmount (Database database, int rfid, int money){
+	public void soustractAmount (int rfid, int money){
 		// Dans le cas ou un utilisateur débite son compte USERS.amount = USERS.amount - money
 	}
-	public int getAmount (Database database, int rfid){
+	public int getAmount (int rfid){
 		// return le crédit du compte (utilisé pour vérifié si un utilisateur a assez pour payer)
 		return 0;
 	}
-	public int getPrice (Database database, int id_provision){
+	public int getPrice (int id_provision){
 		return 0;
 	}
-	public ArrayList<String[]> getProvision (Database database){
+	public ArrayList<String[]> getProvision (){
 
 		// return toute la  base provision sous la forme [["Boisson 1","prix"],["Boisson 1","prix"],...,["Boisson N","prix"]]
 		return null;
 	}
-	public void addSale (Database database, Timestamp time, int terminal, int id_provision, int id_user){
+	public void addSale (Timestamp time, int terminal, int id_provision, int id_user){
 		//todo
 	}
 }
