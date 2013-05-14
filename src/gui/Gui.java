@@ -25,6 +25,8 @@ import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
 
+import database.Database_Functions;
+
 
 
 public class Gui {
@@ -40,12 +42,15 @@ public class Gui {
 	private Text text_1;
 	private Text text_2;
 	private PCSC pcsc;
+	private Database_Functions database;
 	/**
 	 * Launch the application.
 	 * @param args
 	 */
 	public Gui(PCSC pcsc) {
 		this.pcsc = pcsc;
+		this.database = new Database_Functions();
+		
 		try {
 			this.open();
 		} catch (Exception e) {
@@ -303,10 +308,11 @@ public class Gui {
 				@Override
 				public void mouseDoubleClick(MouseEvent e) {
 					int rfid = 1;//getRfid();
-					String[] user = getUserFromRfid(rfid);
-					text.setText(user[0]);
-					text_2.setText(user[1]);
-					text_1.setText(user[2]);
+					Vector<String> user = database.getUserFromRfid(String.valueOf(rfid));
+					text.setText(user.get(0));
+					text_2.setText(user.get(1));
+					text_1.setText(user.get(2));
+				
 					
 					home_composite.setLayoutData(hide_home);
 					check_composite.setLayoutData(show_check);
@@ -334,10 +340,10 @@ public class Gui {
 					
 					String firstname = txtFirstnametextfield.getText();
 					String lastname = txtLastnametextfield.getText();
-					int montant = Integer.parseInt(txtMontant.getText());
-					int rfid = Integer.parseInt(txtRfid.getText());
+					float montant = Float.parseFloat(txtMontant.getText());
+					String rfid = txtRfid.getText();
 					
-					if (addUser(rfid,montant,firstname,lastname)){
+					if (database.addUser(rfid,montant,firstname,lastname)){
 						
 						txtFirstnametextfield.setText("");
 						txtLastnametextfield.setText("");
@@ -397,7 +403,7 @@ public class Gui {
 	protected ArrayList<Object[]> createPayContent(Composite pay_composite) {
 	// TODO Auto-generated method stub
 		//1 Acces database pour recuperer le tableau
-		ArrayList<String[]> data = getProvision();
+		ArrayList<String[]> data = database.getProvision();
 		// 2 pour chaque tableau
 		int datasize = data.size();
 		final ArrayList<Object[]> list = new ArrayList<Object[]>();
