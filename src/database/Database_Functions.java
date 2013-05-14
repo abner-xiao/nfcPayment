@@ -32,8 +32,9 @@ public class Database_Functions {
 	public boolean addUser(String id_user, float amount, String firstname, String lastname){
 			try {
 				Statement s = connection.createStatement();
-				s.executeQuery("INSERT INTO Users VALUES('"+id_user+"',"+amount+",'"+firstname+"','"+lastname+"')");
-				return true;
+				int result = 0;
+				result = s.executeUpdate("INSERT INTO Users VALUES('"+id_user+"',"+amount+",'"+firstname+"','"+lastname+"')");
+				if (result > 0) return true; else return false;
 			}
 			catch (SQLException e) {
 				e.printStackTrace();
@@ -49,8 +50,9 @@ public class Database_Functions {
 	public boolean deleteUser (String id_user){
 		try {
 			Statement s = connection.createStatement();
-			s.executeQuery("DELETE FROM Users WHERE id_user='"+id_user+"'");
-			return true;
+			int result = 0;
+			result = s.executeUpdate("DELETE FROM Users WHERE id_user='"+id_user+"'");
+			if (result > 0) return true; else return false;
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
@@ -67,7 +69,8 @@ public class Database_Functions {
 		Vector<String> user = new Vector<String>();
 		try {
 			Statement s = connection.createStatement();
-			ResultSet rs = s.executeQuery("SELECT amount, firstname, lastname FROM Users WHERE id_user='"+id_user+"'");
+			ResultSet rs = s.executeQuery("SELECT * FROM Users WHERE id_user='"+id_user+"'");
+			rs.next();
 			user.add(rs.getString("amount").trim());
 			user.add(rs.getString("firstname").trim());
 			user.add(rs.getString("lastname").trim());
@@ -184,8 +187,9 @@ public class Database_Functions {
 	public boolean addSale (Timestamp time, int terminal, int id_provision, String id_user){
 		try {
 			Statement s = connection.createStatement();
-			s.executeQuery("INSERT INTO Sales VALUES("+time+","+terminal+","+id_provision+",'"+id_user+"')");
-			return true;
+			int result = 0;
+			result = s.executeUpdate("INSERT INTO Sales VALUES("+time+","+terminal+","+id_provision+",'"+id_user+"')");
+			if (result > 0) return true; else return false;
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
