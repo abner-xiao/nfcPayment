@@ -509,7 +509,7 @@ public ArrayList<Object[]> createPayContent() {
 				// TODO Récuperer le rfid, vérifier si le mec a assez, soustraire au compte, ajouter un log dans la base.
 				
 				//rfid
-				String rfid = "0";//pcsc.getUid();
+				String rfid =pcsc.getUid();
 				//Amount on the user account
 				float amount = database.getAmount(rfid);
 				//Total à payer

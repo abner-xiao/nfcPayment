@@ -132,6 +132,7 @@ public class Database_Functions {
 			Statement s = connection.createStatement();
 			ResultSet rs = s.executeQuery("SELECT amount FROM Users WHERE id_user='"+id_user+"'");
 			rs.next();
+			System.out.println(rs.getFloat("amount"));
 			return rs.getFloat("amount");
 		}
 		catch (SQLException e) {
@@ -148,7 +149,8 @@ public class Database_Functions {
 	public float getPrice (int id_drink){
 		try {
 			Statement s = connection.createStatement();
-			ResultSet rs = s.executeQuery("SELECT amount FROM Provision WHERE id_user='"+id_drink+"'");
+			ResultSet rs = s.executeQuery("SELECT price FROM Provision WHERE id_user='"+id_drink+"'");
+			rs.next();
 			return rs.getFloat("price");
 		}
 		catch (SQLException e) {
@@ -206,7 +208,7 @@ public class Database_Functions {
 		try {
 			Statement s = connection.createStatement();
 			int result = 0;
-			result = s.executeUpdate("INSERT INTO Sales VALUES("+time+","+terminal+","+id_provision+","+quantity+",'"+id_user+"')");
+			result = s.executeUpdate("INSERT INTO Sales(time,terminal,id_drink,quantity,id_user) VALUES('"+time+"',"+terminal+","+id_provision+","+quantity+",'"+id_user+"')");
 			if (result > 0) return true; else return false;
 		}
 		catch (SQLException e) {
