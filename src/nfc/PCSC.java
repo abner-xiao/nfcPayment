@@ -17,7 +17,7 @@ import javax.smartcardio.TerminalFactory;
 
 /**
  * Class reading a NFC chip.
- * Specifically adapted to read the UID of a Mifare chip from the second reader, but can easily be adapted.
+ * Specifically adapted to read the UID of a Mifare chip from the first reader, but can easily be adapted.
  * @author Jacob Tardieu
  *
  */
@@ -26,7 +26,7 @@ public class PCSC extends Thread{
 	private byte[] atr = null;
 	private String protocol = null;
 	private byte[] historical = null;
-	private String UID = null;
+	private String UID = "";
 
 	public PCSC() {
 
@@ -34,7 +34,7 @@ public class PCSC extends Thread{
 
 	/**
 	 * Method allowing to select which terminal we would like to use.
-	 * Specially adapted to select the second available terminal, but commented part can allow to choose.
+	 * Specially adapted to select the first available terminal, but commented part can allow to choose.
 	 * @return the selected terminal
 	 */
 	public CardTerminal selectCardTerminal()
@@ -85,7 +85,7 @@ public class PCSC extends Thread{
 
 			//Code selecting by default the second terminal.
 			if (terminals.size() > 1) {
-				terminal = terminals.get(1);
+				terminal = terminals.get(0);
 			}
 			return terminal;
 
@@ -174,7 +174,7 @@ public class PCSC extends Thread{
 			catch (CardException e) 
 			{
 				// TODO Auto-generated catch block
-				//e.printStackTrace();
+				e.printStackTrace();
 				//return null;
 			}
 			if (card != null) {
@@ -197,6 +197,7 @@ public class PCSC extends Thread{
 					data = Arrays.copyOfRange(data, 0x08, data.length);
 					System.out.println("UID : "+this.byteArrayToHexString((data)));
 					this.UID = this.byteArrayToHexString(data);
+					System.out.println("this.UID = "+this.getUid());
 				}
 				ct.waitForCardAbsent(0);
 				System.out.println("Card removed");
