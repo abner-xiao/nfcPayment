@@ -22,6 +22,7 @@ CREATE TABLE sales (
 	time timestamp,
 	terminal int,
 	id_drink int,
+    quantity int,
 	id_user char(128),
 	primary key(id_sale),
 	foreign key(id_drink) references Provision(id_drink) on delete restrict on update CASCADE,

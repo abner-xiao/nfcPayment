@@ -23,11 +23,13 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
+import org.eclipse.swt.widgets.Monitor;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Spinner;
 import org.eclipse.swt.widgets.Text;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.ModifyEvent;
+import org.eclipse.swt.graphics.Rectangle;
 
 import database.Database_Functions;
 
@@ -70,15 +72,21 @@ public class Gui {
 
 	private void createShell(String name, Display display) {
 		shell = new Shell();
-		shell.setSize(450, 300);
-		//shell.setMinimumSize(450, 300);
+		shell.setSize(400, 300);
+		//shell.setMinimumSize(400, 300);
 		shell.setText("SWT Application " + name);
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
-		final Composite composite = new Composite(shell, SWT.NONE);
+		final Composite composite = new Composite(shell, SWT.None);
 
 		composite.setLayout(new FormLayout());
 		createContents(composite);
-		
+
+		Monitor primary = display.getPrimaryMonitor();
+	    Rectangle bounds = primary.getBounds();
+	    Rectangle rect = shell.getBounds();
+	    int x = bounds.x + (bounds.width - rect.width) / 2;
+	    int y = bounds.y + (bounds.height - rect.height) / 2;
+	    shell.setLocation(x, y);
 		shell.open();
 		shell.layout();
 		while (!shell.isDisposed()) {
@@ -96,21 +104,44 @@ public class Gui {
 		
 			
 			home_composite = new Composite(composite, SWT.NONE);
-			home_composite.setLayout(new GridLayout(2, false));
 			home_composite.setLayoutData(getLayoutData("show"));
+			home_composite.setLayout(new GridLayout(2, false));
+			//home_composite.setLayout(new FormLayout());
+
+
+			final Button btnAdd = new Button(home_composite, SWT.PUSH);
+			btnAdd.setText("ADD");		
+
 			
-			Button btnAdd = new Button(home_composite, SWT.CENTER);
-			btnAdd.setText("ADD");
-			
-			Button btnPay = new Button(home_composite, SWT.NONE);
+			final Button btnPay = new Button(home_composite, SWT.PUSH);
 			btnPay.setText("PAY");
 			
-			Button btnCheck = new Button(home_composite, SWT.NONE);
+			final Button btnCheck = new Button(home_composite, SWT.PUSH);
 
 			btnCheck.setText("CHECK");
 			
-			Button btnStock = new Button(home_composite, SWT.NONE);
+			final Button btnStock = new Button(home_composite, SWT.PUSH);
 			btnStock.setText("STOCK");
+			
+			/*			FormData data = new FormData();
+			data.top = new FormAttachment(0, 50, SWT.CENTER);
+			data.left = new FormAttachment(0, 50, SWT.CENTER);
+			btnAdd.setLayoutData(data);
+			
+			data = new FormData();
+			data.left = new FormAttachment(btnAdd, 0, SWT.CENTER);
+			data.bottom = new FormAttachment(btnStock, 0, SWT.CENTER);
+			btnPay.setLayoutData(data);
+			
+			data = new FormData();
+			data.right = new FormAttachment(btnStock, 0, SWT.CENTER);
+			data.top = new FormAttachment(btnAdd, 0, SWT.CENTER);
+			btnCheck.setLayoutData(data);
+			
+			data = new FormData();
+			data.left = new FormAttachment(btnCheck, 0, SWT.CENTER);
+			data.top = new FormAttachment(btnPay, 0, SWT.CENTER);
+			btnStock.setLayoutData(data);*/
 			
 
 ///////////////////////////////////////////////////////////////////////:::			
@@ -120,7 +151,7 @@ public class Gui {
 			add_new_user_composite.setLayoutData(getLayoutData("hide"));
 			
 			Label lblFirstName = new Label(add_new_user_composite, SWT.NONE);
-			lblFirstName.setSize(74, 17);
+			//lblFirstName.setSize(74, 17);
 			lblFirstName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
 			lblFirstName.setText("First Name");
 			
@@ -247,7 +278,7 @@ public class Gui {
 					home_composite.setLayoutData(getLayoutData("hide"));
 					add_new_user_composite.setLayoutData(getLayoutData("show"));
 					shell.pack();
-					shell.setSize(450, 300);
+					shell.setSize(400, 300);
 					
 					
 				}
@@ -264,7 +295,7 @@ public class Gui {
 					home_composite.setLayoutData(getLayoutData("hide"));
 					pay_composite.setLayoutData(getLayoutData("show"));
 					shell.pack();
-					shell.setSize(450, 300);
+					shell.setSize(400, 300);
 
 				}
 			});
@@ -287,7 +318,7 @@ public class Gui {
 					home_composite.setLayoutData(getLayoutData("hide"));
 					check_composite.setLayoutData(getLayoutData("show"));
 					shell.pack();
-					shell.setSize(450, 300);
+					shell.setSize(400, 300);
 
 				}
 			});
@@ -297,7 +328,7 @@ public class Gui {
 					home_composite.setLayoutData(getLayoutData("hide"));
 					stock_composite.setLayoutData(getLayoutData("show"));
 					shell.pack();
-					shell.setSize(450, 300);
+					shell.setSize(400, 300);
 
 				}
 			});
@@ -344,7 +375,7 @@ public class Gui {
 						home_composite.setLayoutData(getLayoutData("show"));
 						stock_composite.setLayoutData(getLayoutData("hide"));
 						shell.pack();
-						shell.setSize(450, 300);
+						shell.setSize(400, 300);
 					}else{
 						System.out.println("Not possible to add a user now!! Try again later.");
 					}
@@ -364,7 +395,7 @@ public class Gui {
 					home_composite.setLayoutData(getLayoutData("show"));
 					add_new_user_composite.setLayoutData(getLayoutData("hide"));
 					shell.pack();
-					shell.setSize(450, 300);
+					shell.setSize(400, 300);
 				}
 			});
 			
@@ -391,7 +422,7 @@ public class Gui {
 					home_composite.setLayoutData(getLayoutData("show"));
 					check_composite.setLayoutData(getLayoutData("hide"));
 					shell.pack();
-					shell.setSize(450, 300);
+					shell.setSize(400, 300);
 				}
 			});
 
@@ -476,7 +507,7 @@ public ArrayList<Object[]> createPayContent() {
 				// TODO Récuperer le rfid, vérifier si le mec a assez, soustraire au compte, ajouter un log dans la base.
 				
 				//rfid
-				String rfid = pcsc.getUid();
+				String rfid = "0";//pcsc.getUid();
 				//Amount on the user account
 				float amount = database.getAmount(rfid);
 				//Total à payer
@@ -488,11 +519,25 @@ public ArrayList<Object[]> createPayContent() {
 					System.out.println("Payment OK!");
 					//add log
 					Timestamp time = new Timestamp(Calendar.getInstance().getTime().getTime ());
-					database.addSale(time, 1, 1, rfid);
+					//pour chaque boisson
+					for (int k = listsize-2;k>=0;k--){
+						// si la quantité n'est pas nulle
+						if (((Spinner)list.get(k)[2]).getText()!="0"){
+							//on recupere la quantité
+							int quantity = Integer.parseInt(((Spinner)list.get(k)[2]).getText());
+							//on recupere la boisson
+							String boisson = ((Label)list.get(k)[0]).getText();
+							// on recupere l'id de la boisson
+							int id_provision = database.getProvisonId(boisson);
+							
+							database.addSale(time, 1, id_provision, quantity,rfid);
+							
+						}
+					}
 					home_composite.setLayoutData(getLayoutData("show"));
 					pay_composite.setLayoutData(getLayoutData("hide"));
 					shell.pack();
-					shell.setSize(450, 300);
+					shell.setSize(400, 300);
 				}else{
 					System.out.println("You don't have enough money");
 					//On remet tout a 0
@@ -508,7 +553,7 @@ public ArrayList<Object[]> createPayContent() {
 				home_composite.setLayoutData(getLayoutData("show"));
 				pay_composite.setLayoutData(getLayoutData("hide"));
 				shell.pack();
-				shell.setSize(450, 300);
+				shell.setSize(400, 300);
 			}
 		});
 		

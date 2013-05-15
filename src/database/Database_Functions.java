@@ -156,6 +156,23 @@ public class Database_Functions {
 			return -1;
 		}
 	}
+	/**
+	 * Gives the id of an article
+	 * @param name
+	 * @return the id if all the ok and -1 otherwise.
+	 */
+	public int getProvisonId (String name){
+		try {
+			Statement s = connection.createStatement();
+			ResultSet rs = s.executeQuery("SELECT id_drink FROM Provision WHERE name='"+name+"'");
+			rs.next();
+			return rs.getInt("id_drink");
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return -1;
+		}
+	}
 	
 	/**
 	 * List all drinks available.
@@ -185,11 +202,11 @@ public class Database_Functions {
 	 * @param id_user
 	 * @return true if the operation is successful and false otherwise.
 	 */
-	public boolean addSale (Timestamp time, int terminal, int id_provision, String id_user){
+	public boolean addSale (Timestamp time, int terminal, int id_provision, int quantity , String id_user){
 		try {
 			Statement s = connection.createStatement();
 			int result = 0;
-			result = s.executeUpdate("INSERT INTO Sales VALUES("+time+","+terminal+","+id_provision+",'"+id_user+"')");
+			result = s.executeUpdate("INSERT INTO Sales VALUES("+time+","+terminal+","+id_provision+","+quantity+",'"+id_user+"')");
 			if (result > 0) return true; else return false;
 		}
 		catch (SQLException e) {
