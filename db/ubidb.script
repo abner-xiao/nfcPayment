@@ -51,9 +51,11 @@ GRANT DBA TO SA
 SET SCHEMA SYSTEM_LOBS
 INSERT INTO BLOCKS VALUES(0,2147483647,0)
 SET SCHEMA PUBLIC
-INSERT INTO USERS VALUES('2                                                                                                                               ',123.0E0,'Cl\u00e9ment                       ','Fumey                         ')
+INSERT INTO USERS VALUES('                                                                                                                                ',0.0E0,'                              ','                              ')
+INSERT INTO USERS VALUES('2                                                                                                                               ',8.9E0,'Cl\u00e9ment                       ','Fumey                         ')
 INSERT INTO USERS VALUES('3                                                                                                                               ',3.0E0,'test                          ','ff                            ')
 INSERT INTO USERS VALUES('eeee                                                                                                                            ',2.0E0,'ezg                           ','ze                            ')
+INSERT INTO USERS VALUES('efef                                                                                                                            ',100.0E0,'first_VEFEVtext_field         ','R                             ')
 INSERT INTO PROVISION VALUES(1,'biere                         ',2.9E0)
 INSERT INTO PROVISION VALUES(2,'cidre                         ',3.0E0)
 INSERT INTO PROVISION VALUES(3,'boud                          ',0.3E0)

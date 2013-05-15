@@ -76,7 +76,7 @@ public class Database_Functions {
 			user.add(rs.getString("lastname").trim());
 		} catch (SQLException e) {
 			e.printStackTrace();
-			return null;
+			return user;
 		}
 		return user;
 	}
