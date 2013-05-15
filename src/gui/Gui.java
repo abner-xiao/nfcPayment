@@ -13,9 +13,6 @@ import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MouseAdapter;
 import org.eclipse.swt.events.MouseEvent;
 import org.eclipse.swt.layout.FillLayout;
-import org.eclipse.swt.layout.FormAttachment;
-import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
@@ -74,13 +71,11 @@ public class Gui {
 	private void createShell(String name, Display display) {
 		shell = new Shell();
 		shell.setSize(400, 300);
-		//shell.setMinimumSize(400, 300);
+		shell.setMinimumSize(400, 300);
 		shell.setText("SWT Application " + name);
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
-		final Composite composite = new Composite(shell, SWT.None);
-
-		composite.setLayout(new FormLayout());
-		createContents(composite);
+		
+		createContents("home");
 
 		Monitor primary = display.getPrimaryMonitor();
 	    Rectangle bounds = primary.getBounds();
@@ -88,8 +83,9 @@ public class Gui {
 	    int x = bounds.x + (bounds.width - rect.width) / 2;
 	    int y = bounds.y + (bounds.height - rect.height) / 2;
 	    shell.setLocation(x, y);
+	    
 		shell.open();
-		shell.layout();
+		//shell.layout();
 		while (!shell.isDisposed()) {
 			if (!display.readAndDispatch()) {
 				display.sleep();
@@ -100,355 +96,372 @@ public class Gui {
 		
 	}
 
-	void createContents(final Composite composite) {
+	void createContents(String content) {
+			deleteAllContent(shell);
+			if(content=="home"){
+				createHomeContent(shell);
+			}else if (content=="add"){	
+				createAddUserContent(shell);
+			}else if (content=="pay"){
+				createPayContent(shell);
+			}else if (content=="check"){
+				createCheckContent(shell);
+			}else if (content=="stock"){
+				//TODO createStockCOntent(shell);
+				createStockContent(shell);
+			}
+			shell.layout();
+	}
+	
+
+
+	private void deleteAllContent(Shell shell2) {
+		Control[] children = shell2.getChildren();
+		int len = children.length;
+		for (int i=len-1; i>=0;i--){
+			children[i].dispose();
+		}
+	}
+	
+
+	public void createHomeContent(Shell shell1) {
+		home_composite = new Composite(shell1, SWT.NONE);
+		GridLayout gridLayout = new GridLayout(2, false);
+		gridLayout.marginWidth = 20;
+		gridLayout.marginHeight = 20;
+	    gridLayout.horizontalSpacing = 20;
+	    gridLayout.verticalSpacing = 20;
+		home_composite.setLayout(gridLayout);
+
+		Button btnAdd = new Button(home_composite, SWT.PUSH);
+		btnAdd.setText("ADD");
+		btnAdd.setSize(150, 80);
+		
 
 		
-			
-			home_composite = new Composite(composite, SWT.NONE);
-			home_composite.setLayoutData(getLayoutData("show"));
-			home_composite.setLayout(new GridLayout(2, false));
-			//home_composite.setLayout(new FormLayout());
-
-
-			final Button btnAdd = new Button(home_composite, SWT.PUSH);
-			btnAdd.setText("ADD");		
-
-			
-			final Button btnPay = new Button(home_composite, SWT.PUSH);
-			btnPay.setText("PAY");
-			
-			final Button btnCheck = new Button(home_composite, SWT.PUSH);
-
-			btnCheck.setText("CHECK");
-			
-			final Button btnStock = new Button(home_composite, SWT.PUSH);
-			btnStock.setText("STOCK");
-			
-			/*			FormData data = new FormData();
-			data.top = new FormAttachment(0, 50, SWT.CENTER);
-			data.left = new FormAttachment(0, 50, SWT.CENTER);
-			btnAdd.setLayoutData(data);
-			
-			data = new FormData();
-			data.left = new FormAttachment(btnAdd, 0, SWT.CENTER);
-			data.bottom = new FormAttachment(btnStock, 0, SWT.CENTER);
-			btnPay.setLayoutData(data);
-			
-			data = new FormData();
-			data.right = new FormAttachment(btnStock, 0, SWT.CENTER);
-			data.top = new FormAttachment(btnAdd, 0, SWT.CENTER);
-			btnCheck.setLayoutData(data);
-			
-			data = new FormData();
-			data.left = new FormAttachment(btnCheck, 0, SWT.CENTER);
-			data.top = new FormAttachment(btnPay, 0, SWT.CENTER);
-			btnStock.setLayoutData(data);*/
-			
-
-///////////////////////////////////////////////////////////////////////:::			
-
-			add_new_user_composite = new Composite(composite, SWT.NONE);
-			add_new_user_composite.setLayout(new GridLayout(3, false));
-			add_new_user_composite.setLayoutData(getLayoutData("hide"));
-			
-			Label lblFirstName = new Label(add_new_user_composite, SWT.NONE);
-			//lblFirstName.setSize(74, 17);
-			lblFirstName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-			lblFirstName.setText("First Name");
-			
-			final Text txtFirstnametextfield = new Text(add_new_user_composite, SWT.BORDER);
-			txtFirstnametextfield.setText("first_name_text_field");
-			txtFirstnametextfield.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			new Label(add_new_user_composite, SWT.NONE);
-			
-			Label lblLastName = new Label(add_new_user_composite, SWT.NONE);
-			lblLastName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-			lblLastName.setText("Last Name");
-			
-			final Text txtLastnametextfield = new Text(add_new_user_composite, SWT.BORDER);
-			txtLastnametextfield.setText("Last_name_text_field");
-			txtLastnametextfield.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			new Label(add_new_user_composite, SWT.NONE);
-			
-			Label lblMontant = new Label(add_new_user_composite, SWT.NONE);
-			lblMontant.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-			lblMontant.setText("Montant");
-			
-			final Text txtMontant = new Text(add_new_user_composite, SWT.BORDER);
-			txtMontant.setText("Montant");
-			txtMontant.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			new Label(add_new_user_composite, SWT.NONE);
-			
-			Label lblId = new Label(add_new_user_composite, SWT.NONE);
-			lblId.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-			lblId.setText("id");
-			
-			final Text txtRfid = new Text(add_new_user_composite, SWT.BORDER);
-			txtRfid.setText("rfid");
-			txtRfid.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			
-			Button btnGetRfid = new Button(add_new_user_composite, SWT.NONE);
-			btnGetRfid.setText("Get RFID");
-			
-			Button btnGetBackHome = new Button(add_new_user_composite, SWT.NONE);
-			btnGetBackHome.setText("<< Back");
-			
-			Button btnCreateUser = new Button(add_new_user_composite, SWT.NONE);
-			btnCreateUser.setText("Create User");
-			
-			new Label(add_new_user_composite, SWT.NONE);
-			//////////////////////////////////////////////////////////////////////////////////
-	
-			pay_composite = new Composite(composite, SWT.NONE);
-			pay_composite.setLayout(new GridLayout(4, false));
-			pay_composite.setLayoutData(getLayoutData("hide"));
-			/*
-			Label lblBoisson = new Label(pay_composite, SWT.NONE);
-			lblBoisson.setText("Boisson");
-			
-			Label lblPrix = new Label(pay_composite, SWT.NONE);
-			lblPrix.setText("Prix");
-			
-			@SuppressWarnings("unused")
-			Spinner spinner = new Spinner(pay_composite, SWT.BORDER);
-
-			
-			txtSubTotal = new Text(pay_composite, SWT.BORDER);
-			txtSubTotal.setText("total");
-			txtSubTotal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			new Label(pay_composite, SWT.NONE);
-			new Label(pay_composite, SWT.NONE);
-			new Label(pay_composite, SWT.NONE);
-			
-			Label lblBigtotal = new Label(pay_composite, SWT.NONE);
-			lblBigtotal.setText("BigTotal");
-			txtTotal = new Text(pay_composite, SWT.BORDER);
-			txtTotal.setText("total");
-			txtTotal.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			new Label(pay_composite, SWT.NONE);*/
-/////////////////////////////////////////////////////////////////////				
-	
-			check_composite = new Composite(composite, SWT.NONE);
-			check_composite.setLayout(new GridLayout(2, false));
-			check_composite.setLayoutData(getLayoutData("hide"));
-
-			Label label = new Label(check_composite, SWT.NONE);
-			label.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-			label.setText("First Name");
-			
-			final Text text = new Text(check_composite, SWT.BORDER);
-			text.setText("first_name_text_field");
-			text.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			
-			Label label_1 = new Label(check_composite, SWT.NONE);
-			label_1.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-			label_1.setText("Last Name");
-			
-			final Text text_2 = new Text(check_composite, SWT.BORDER);
-			text_2.setText("Last_name_text_field");
-			text_2.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			
-			Label label_2 = new Label(check_composite, SWT.NONE);
-			label_2.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
-			label_2.setText("Montant");
-			
-			final Text text_1 = new Text(check_composite, SWT.BORDER);
-			text_1.setText("Montant");
-			text_1.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
-			
-			Button btnGetBackHome_1 = new Button(check_composite, SWT.NONE);
-			btnGetBackHome_1.setText("<< Back");
-			new Label(check_composite, SWT.NONE);
-			
-			new Label(add_new_user_composite, SWT.NONE);
-			new Label(add_new_user_composite, SWT.NONE);
-			new Label(add_new_user_composite, SWT.NONE);
-//////////////////////////////////////////////////////////////////////			
+		Button btnPay = new Button(home_composite, SWT.PUSH);
+		btnPay.setText("PAY");
 		
-			stock_composite = new Composite(composite, SWT.NONE);
-			stock_composite.setLayoutData(getLayoutData("hide"));
-			
-			///////////////////////////////////////////////////////////////
-			////                        EVENT HANDLER                   ///
-			///////////////////////////////////////////////////////////////
-			
-			/////For home /////
-			btnAdd.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseDoubleClick(MouseEvent e) {
-					home_composite.setLayoutData(getLayoutData("hide"));
-					add_new_user_composite.setLayoutData(getLayoutData("show"));
-					shell.pack();
-					shell.setSize(400, 300);
-					
-					
-				}
-			});
-			btnPay.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseDoubleClick(MouseEvent e) {
-					Control[] children = pay_composite.getChildren();
-					int len = children.length;
-					for (int i=len-1; i>=0;i--){
-						children[i].dispose();
-					}
-					createPayContent();
-					home_composite.setLayoutData(getLayoutData("hide"));
-					pay_composite.setLayoutData(getLayoutData("show"));
-					shell.pack();
-					shell.setSize(400, 300);
+		Button btnCheck = new Button(home_composite, SWT.PUSH);
 
-				}
-			});
-			btnCheck.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseDoubleClick(MouseEvent e) {
-					String rfid = pcsc.getUid();
-					Vector<String> user = database.getUserFromRfid(rfid);
-					System.out.println(user.toString());
-					if (user.size()>0){
-					text.setText(user.get(0));
-					text_2.setText(user.get(1));
-					text_1.setText(user.get(2));
-					}else{
-						text.setText("Unknown User");
-						text_2.setText("Unknown User");
-						text_1.setText("Unknown User");
-					}
-					
-					home_composite.setLayoutData(getLayoutData("hide"));
-					check_composite.setLayoutData(getLayoutData("show"));
-					shell.pack();
-					shell.setSize(400, 300);
-
-				}
-			});
-			btnStock.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseDoubleClick(MouseEvent e) {
-					home_composite.setLayoutData(getLayoutData("hide"));
-					stock_composite.setLayoutData(getLayoutData("show"));
-					shell.pack();
-					shell.setSize(400, 300);
-
-				}
-			});
-			
-			
-			/////For add_user /////
-			txtMontant.addFocusListener(new FocusListener() {
-				@Override
-				public void focusLost(FocusEvent arg0) {
-					try{
-						Float.parseFloat(txtMontant.getText());
-					}catch (Exception e){
-						System.out.println("please enter a valid amount");
-						txtMontant.setText("invalid amount");
-						txtMontant.setFocus();
-					}
-				}
-
-				@Override
-				public void focusGained(FocusEvent arg0) {
-					// TODO Auto-generated method stub
-					txtMontant.setText("0");
-					
-				}
+		btnCheck.setText("CHECK");
+		
+		Button btnStock = new Button(home_composite, SWT.PUSH);
+		btnStock.setText("STOCK");
+		
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.verticalAlignment = SWT.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		btnAdd.setLayoutData(gridData);
+		
+		gridData = new GridData();
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.verticalAlignment = SWT.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		btnPay.setLayoutData(gridData);
+		
+		gridData = new GridData();
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.verticalAlignment = SWT.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		btnCheck.setLayoutData(gridData);
+		
+		gridData = new GridData();
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.verticalAlignment = SWT.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		btnStock.setLayoutData(gridData);
+		
+		/////Event Handler For home /////
+		btnAdd.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				createContents("add");		
 				
-			});
-			
-			btnCreateUser.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseDoubleClick(MouseEvent e) {
-					//Je recupere les infos et j'utilise la fonction pour ajouter a la base
-					
-					String firstname = txtFirstnametextfield.getText();
-					String lastname = txtLastnametextfield.getText();
-					float montant = Float.parseFloat(txtMontant.getText());
-					String rfid = txtRfid.getText();
-					
-					if (database.addUser(rfid,montant,firstname,lastname)){
+			}
+		});
+		btnPay.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				createContents("pay");	
+
+			}
+		});
+		btnCheck.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				createContents("check");
+			}
+		});
+		btnStock.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				createContents("stock");
+			}
+		});
+		
+	}
+	
+	public void createAddUserContent(Shell shell1) {
+		add_new_user_composite = new Composite(shell1, SWT.NONE);
+		GridLayout gridLayout = new GridLayout(3, false);
+		gridLayout.marginWidth = 20;
+		gridLayout.marginHeight = 20;
+	    gridLayout.horizontalSpacing = 5;
+	    gridLayout.verticalSpacing = 5;
+		add_new_user_composite.setLayout(gridLayout);
+		
+		Label lblFirstName = new Label(add_new_user_composite, SWT.NONE);
+		//lblFirstName.setSize(74, 17);
+		lblFirstName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblFirstName.setText("First Name");
+		lblFirstName.setLayoutData(getGridData());
+		
+		final Text txtFirstnametextfield = new Text(add_new_user_composite, SWT.BORDER);
+		txtFirstnametextfield.setText("first_name_text_field");
+		txtFirstnametextfield.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txtFirstnametextfield.setLayoutData(getGridData());
+		new Label(add_new_user_composite, SWT.NONE);
+		
+		Label lblLastName = new Label(add_new_user_composite, SWT.NONE);
+		lblLastName.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblLastName.setText("Last Name");
+		lblLastName.setLayoutData(getGridData());
+		
+		final Text txtLastnametextfield = new Text(add_new_user_composite, SWT.BORDER);
+		txtLastnametextfield.setText("Last_name_text_field");
+		txtLastnametextfield.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txtLastnametextfield.setLayoutData(getGridData());
+		new Label(add_new_user_composite, SWT.NONE);
+		
+		Label lblMontant = new Label(add_new_user_composite, SWT.NONE);
+		lblMontant.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblMontant.setText("Montant");
+		lblMontant.setLayoutData(getGridData());
+		
+		final Text txtMontant = new Text(add_new_user_composite, SWT.BORDER);
+		txtMontant.setText("Montant");
+		txtMontant.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txtMontant.setLayoutData(getGridData());
+		new Label(add_new_user_composite, SWT.NONE);
+		
+		Label lblId = new Label(add_new_user_composite, SWT.NONE);
+		lblId.setLayoutData(new GridData(SWT.RIGHT, SWT.CENTER, false, false, 1, 1));
+		lblId.setText("id");
+		lblId.setLayoutData(getGridData());
+		
+		final Text txtRfid = new Text(add_new_user_composite, SWT.BORDER);
+		txtRfid.setText("rfid");
+		txtRfid.setLayoutData(new GridData(SWT.FILL, SWT.CENTER, true, false, 1, 1));
+		txtRfid.setLayoutData(getGridData());
+		
+		Button btnGetRfid = new Button(add_new_user_composite, SWT.NONE);
+		btnGetRfid.setText("Get RFID");
+		btnGetRfid.setLayoutData(getGridData());
+		
+		Button btnGetBackHome = new Button(add_new_user_composite, SWT.NONE);
+		btnGetBackHome.setText("<< Back");
+		btnGetBackHome.setLayoutData(getGridData());
+		
+		Button btnCreateUser = new Button(add_new_user_composite, SWT.NONE);
+		btnCreateUser.setText("Create User");
+		btnCreateUser.setLayoutData(getGridData());
+		
+		new Label(add_new_user_composite, SWT.NONE);
+		
+
+
+		
+	/////Event Handler add_user /////
+				txtMontant.addFocusListener(new FocusListener() {
+					@Override
+					public void focusLost(FocusEvent arg0) {
+						try{
+							Float.parseFloat(txtMontant.getText());
+						}catch (Exception e){
+							System.out.println("please enter a valid amount");
+							txtMontant.setText("invalid amount");
+							txtMontant.setFocus();
+						}
+					}
+
+					@Override
+					public void focusGained(FocusEvent arg0) {
+						// TODO Auto-generated method stub
+						txtMontant.setText("0");
 						
+					}
+					
+				});
+				
+				btnCreateUser.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseDoubleClick(MouseEvent e) {
+						//Je recupere les infos et j'utilise la fonction pour ajouter a la base
+						
+						String firstname = txtFirstnametextfield.getText();
+						String lastname = txtLastnametextfield.getText();
+						float montant = Float.parseFloat(txtMontant.getText());
+						String rfid = txtRfid.getText();
+						
+						if (database.addUser(rfid,montant,firstname,lastname)){
+							
+							txtFirstnametextfield.setText("");
+							txtLastnametextfield.setText("");
+							txtMontant.setText("0");
+							txtRfid.setText("");
+							createContents("home");
+						}else{
+							System.out.println("Not possible to add a user now!! Try again later.");
+						}
+						
+						
+
+					}
+				});
+				
+				btnGetBackHome.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseDoubleClick(MouseEvent e) {
 						txtFirstnametextfield.setText("");
 						txtLastnametextfield.setText("");
 						txtMontant.setText("0");
 						txtRfid.setText("");
-						home_composite.setLayoutData(getLayoutData("show"));
-						stock_composite.setLayoutData(getLayoutData("hide"));
-						shell.pack();
-						shell.setSize(400, 300);
-					}else{
-						System.out.println("Not possible to add a user now!! Try again later.");
+						createContents("home");
 					}
-					
-					
-
-				}
-			});
-			
-			btnGetBackHome.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseDoubleClick(MouseEvent e) {
-					txtFirstnametextfield.setText("");
-					txtLastnametextfield.setText("");
-					txtMontant.setText("0");
-					txtRfid.setText("");
-					home_composite.setLayoutData(getLayoutData("show"));
-					add_new_user_composite.setLayoutData(getLayoutData("hide"));
-					shell.pack();
-					shell.setSize(400, 300);
-				}
-			});
-			
-			btnGetRfid.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseDoubleClick(MouseEvent e) {
-					String rfid = pcsc.getUid();
-					System.out.println("UID from GUI = "+pcsc.getUid());
-					if (rfid == null){
-						txtRfid.setText("No UID detected");
-					}else{
-						txtRfid.setText(rfid);
+				});
+				
+				btnGetRfid.addMouseListener(new MouseAdapter() {
+					@Override
+					public void mouseDoubleClick(MouseEvent e) {
+						String rfid = pcsc.getUid();
+						if (rfid == null){
+							txtRfid.setText("No UID detected");
+						}else{
+							txtRfid.setText(rfid);
+						}
 					}
-				}
-			});
-			
-			
-			/////////For Check ////////
-			btnGetBackHome_1.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseDoubleClick(MouseEvent e) {
-					text.setText("");
-					text_2.setText("");
-					text_1.setText("0");
-					home_composite.setLayoutData(getLayoutData("show"));
-					check_composite.setLayoutData(getLayoutData("hide"));
-					shell.pack();
-					shell.setSize(400, 300);
-				}
-			});
-
+				});
+				
 	}
 	
-	public FormData getLayoutData(String layout){
-		if (layout == "show"){
-			FormData show_home = new FormData();
-			show_home.top = new FormAttachment(0, 10);
-			show_home.left = new FormAttachment(0, 10);
-			return show_home;
-		}else{
-			FormData hide_home = new FormData();
-			hide_home.top = new FormAttachment(0);
-			hide_home.left = new FormAttachment(0);
-			hide_home.height = 0;
-			hide_home.width = 0;
-			return hide_home;
-		}
+	
+	private GridData getGridData() {
+		// TODO Auto-generated method stub
+		GridData gridData = new GridData();
+		gridData.horizontalAlignment = SWT.FILL;
+		gridData.verticalAlignment = SWT.FILL;
+		gridData.grabExcessHorizontalSpace = true;
+		gridData.grabExcessVerticalSpace = true;
+		return gridData;
 	}
 
-public ArrayList<Object[]> createPayContent() {
+	public void createCheckContent(Shell shell1) {
+		check_composite = new Composite(shell1, SWT.NONE);
+		GridLayout gridLayout = new GridLayout(2, false);
+		gridLayout.marginWidth = 20;
+		gridLayout.marginHeight = 20;
+	    gridLayout.horizontalSpacing = 5;
+	    gridLayout.verticalSpacing = 5;
+	    check_composite.setLayout(gridLayout);
+
+		Label label = new Label(check_composite, SWT.NONE);
+		label.setText("First Name");
+		label.setLayoutData(getGridData());
+		
+		final Text text = new Text(check_composite, SWT.BORDER);
+		text.setText("first_name_text_field");
+		text.setLayoutData(getGridData());
+		
+		Label label_1 = new Label(check_composite, SWT.NONE);
+		label.setText("Last Name");
+		label_1.setLayoutData(getGridData());
+		
+		final Text text_2 = new Text(check_composite, SWT.BORDER);
+		text_2.setLayoutData(getGridData());
+		
+		Label label_2 = new Label(check_composite, SWT.NONE);
+		label.setText("Amount");
+		label_2.setLayoutData(getGridData());
+		
+		final Text text_1 = new Text(check_composite, SWT.BORDER);
+		text_1.setLayoutData(getGridData());
+		
+		Button btnGetBackHome_1 = new Button(check_composite, SWT.NONE);
+		btnGetBackHome_1.setText("<< Back");
+		btnGetBackHome_1.setLayoutData(getGridData());
+		
+		new Label(check_composite, SWT.NONE);
+		
+		String rfid = "6";//pcsc.getUid();
+		Vector<String> user = database.getUserFromRfid(rfid);
+		System.out.println(user.toString());
+		if (user.size()>0){
+			text.setText(user.get(1));
+			text_2.setText(user.get(2));
+			text_1.setText(user.get(0));
+		}else{
+			text.setText("Unknown User");
+			text_2.setText("Unknown User");
+			text_1.setText("Unknown User");
+		}
+		
+		/////////Event Handler For Check ////////
+		btnGetBackHome_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				createContents("home");
+			}
+		});
+	}
+	
+	
+	public void createPayContent(Shell shell1) {
 	// TODO Auto-generated method stub
 		//1 Acces database pour recuperer le tableau
+		pay_composite = new Composite(shell1, SWT.NONE);
+		GridLayout gridLayout = new GridLayout(4, false);
+		gridLayout.marginWidth = 20;
+		gridLayout.marginHeight = 20;
+	    gridLayout.horizontalSpacing = 5;
+	    gridLayout.verticalSpacing = 5;
+	    pay_composite.setLayout(gridLayout);
+		
+	    //affichage de l'user avant
+		Vector<String> user = database.getUserFromRfid("6");//pcsc.getUid()); 
+		if (user.size()>0){
+			String amount = user.get(0);
+			String firstname = user.get(1);
+			String lastname = user.get(2);
+
+			
+			Label uid_label = new Label(pay_composite, SWT.NONE);
+			uid_label.setText("6"/*pcsc.getUid()*/);
+			Label firstname_label = new Label(pay_composite, SWT.NONE);
+			firstname_label.setText(firstname);
+			Label lastname_label = new Label(pay_composite, SWT.NONE);
+			firstname_label.setText(lastname);
+			Label amount_label = new Label(pay_composite, SWT.NONE);
+			firstname_label.setText(amount);
+			
+		}else{
+			new Label(pay_composite, SWT.NONE);
+			new Label(pay_composite, SWT.NONE);
+			new Label(pay_composite, SWT.NONE);
+			Button getUID = new Button(pay_composite, SWT.NONE);
+			getUID.setText("Get User ID");
+			//event Handler
+			
+	
+		}
+	    
+	    
+	    
 		ArrayList<String[]> data = database.getProvision();
 		// 2 pour chaque tableau
 		int datasize = data.size();
@@ -460,32 +473,54 @@ public ArrayList<Object[]> createPayContent() {
 			
 			tab[0] = new Label(pay_composite, SWT.NONE);
 			((Label) tab[0]).setText(provision[0]);
+			((Label) tab[0]).setLayoutData(getGridData());
 			
 			tab[1] = new Label(pay_composite, SWT.NONE);
 			((Label) tab[1]).setText(provision[1]);
+			((Label) tab[1]).setLayoutData(getGridData());
 			
 			tab[2] = new Spinner(pay_composite, SWT.BORDER);
+			((Spinner) tab[2]).setLayoutData(getGridData());
 			
 			tab[3] = new Text(pay_composite, SWT.BORDER);
 			((Text) tab[3]).setText("0");
+			((Text) tab[3]).setLayoutData(getGridData());
 			list.add(tab);	
 			
 		}
 		Object[] tab =  new Object[4];
 		
-		tab[0] =  new Button(pay_composite, SWT.NONE);
-		((Button) tab[0]).setText("<< Back");
-		tab[1] = new Button(pay_composite, SWT.NONE);
-		((Button) tab[1]).setText("PAY");
+		tab[0] = new Label(pay_composite, SWT.NONE);
+		tab[1] = new Label(pay_composite, SWT.NONE);
+		
 		tab[2] =  new Label(pay_composite, SWT.NONE);
 		((Label) tab[2]).setText("Total");
+		((Label) tab[2]).setLayoutData(getGridData());
+		
 		tab[3] = new Text(pay_composite, SWT.BORDER);
 		((Text) tab[3]).setText("0");
+		((Text) tab[3]).setLayoutData(getGridData());
+		list.add(tab);
+		//----------------------//
+		
+		tab =  new Object[4];
+		
+		tab[0] =  new Button(pay_composite, SWT.NONE);
+		((Button) tab[0]).setText("<< Back");
+		((Button) tab[0]).setLayoutData(getGridData());
+		
+		tab[1] = new Button(pay_composite, SWT.NONE);
+		((Button) tab[1]).setText("PAY");
+		((Button) tab[1]).setLayoutData(getGridData());
+		
+		tab[2] = new Label(pay_composite, SWT.NONE);
+		tab[3] = new Label(pay_composite, SWT.NONE);
+		
 		list.add(tab);
 		
 		//// Create handlers for all the array list
 		final int listsize = list.size();
-		for (int i = listsize-2;i>=0;i--){
+		for (int i = listsize-3;i>=0;i--){
 			final Object[] tab1 = list.get(i);
 			((Spinner) tab1[2]).addModifyListener(new ModifyListener() {
 				public void modifyText(ModifyEvent arg0) {
@@ -494,10 +529,10 @@ public ArrayList<Object[]> createPayContent() {
 					float subtotal = (float)number * price;
 					((Text) tab1[3]).setText(String.valueOf(subtotal));
 					float total=0;
-					for (int j = listsize-2;j>=0;j--){
+					for (int j = listsize-3;j>=0;j--){
 						total = total + Float.parseFloat(((Text)list.get(j)[3]).getText());
 					}
-					((Text)list.get(listsize-1)[3]).setText(String.valueOf(total));			
+					((Text)list.get(listsize-2)[3]).setText(String.valueOf(total));			
 					
 				}
 			});
@@ -509,11 +544,11 @@ public ArrayList<Object[]> createPayContent() {
 				// TODO Récuperer le rfid, vérifier si le mec a assez, soustraire au compte, ajouter un log dans la base.
 				
 				//rfid
-				String rfid =pcsc.getUid();
+				String rfid = "6";//pcsc.getUid();
 				//Amount on the user account
 				float amount = database.getAmount(rfid);
 				//Total à payer
-				float total =  Float.parseFloat(((Text) list.get(listsize-1)[3]).getText());
+				float total =  Float.parseFloat(((Text) list.get(listsize-2)[3]).getText());
 				System.out.println("total : "+ total);
 				System.out.println("amount : "+amount);
 				
@@ -522,7 +557,7 @@ public ArrayList<Object[]> createPayContent() {
 					//add log
 					Timestamp time = new Timestamp(Calendar.getInstance().getTime().getTime ());
 					//pour chaque boisson
-					for (int k = listsize-2;k>=0;k--){
+					for (int k = listsize-3;k>=0;k--){
 						// si la quantité n'est pas nulle
 						if (((Spinner)list.get(k)[2]).getText()!="0"){
 							//on recupere la quantité
@@ -536,10 +571,7 @@ public ArrayList<Object[]> createPayContent() {
 							
 						}
 					}
-					home_composite.setLayoutData(getLayoutData("show"));
-					pay_composite.setLayoutData(getLayoutData("hide"));
-					shell.pack();
-					shell.setSize(400, 300);
+					createContents("home");
 				}else{
 					System.out.println("You don't have enough money");
 					//On remet tout a 0
@@ -552,15 +584,14 @@ public ArrayList<Object[]> createPayContent() {
 		((Button) list.get(listsize-1)[0]).addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
-				home_composite.setLayoutData(getLayoutData("show"));
-				pay_composite.setLayoutData(getLayoutData("hide"));
-				shell.pack();
-				shell.setSize(400, 300);
+				createContents("home");
 			}
 		});
-		
-		return list;	
 }	
 
+	private void createStockContent(Shell shell2) {
+	stock_composite = new Composite(shell2, SWT.NONE);
+	
+}
 
 }
