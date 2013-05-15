@@ -42,6 +42,22 @@ public class Database_Functions {
 			}
 	}
 	
+	public ArrayList<String[]> getUsers() {
+		try {
+			ArrayList<String[]> prov = new ArrayList<String[]>();
+			Statement s = connection.createStatement();
+			ResultSet rs = s.executeQuery("SELECT * FROM users");
+			while (rs.next()) {
+				prov.add(new String[]{rs.getString("id_user").trim(),rs.getString("amount").trim(), rs.getString("firstname").trim(), rs.getString("lastname").trim()});
+			}
+			return prov;
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
 	/**
 	 * Delete an user from the database
 	 * @param id_user
@@ -49,6 +65,7 @@ public class Database_Functions {
 	 */
 	public boolean deleteUser (String id_user){
 		try {
+			System.out.println(id_user);
 			Statement s = connection.createStatement();
 			int result = 0;
 			result = s.executeUpdate("DELETE FROM Users WHERE id_user='"+id_user+"'");
@@ -112,8 +129,8 @@ public class Database_Functions {
 			int result = 0;
 			float amount = this.getAmount(id_user);
 			if (amount - money < 0) return false; //Check if there is enough money on the account
-			
-			result = s.executeUpdate("UPDATE Users SET amount="+money+" WHERE id_user='"+id_user+"'");
+			float new_amount = amount - money;
+			result = s.executeUpdate("UPDATE Users SET amount="+new_amount+" WHERE id_user='"+id_user+"'");
 			if (result > 0) return true; else return false;
 		}
 		catch (SQLException e) {
@@ -159,11 +176,28 @@ public class Database_Functions {
 		}
 	}
 	/**
+	 * Set the price of an article
+	 * @param id_drink
+	 * @return boolean
+	 */
+	public boolean setPrice (int id_drink, float new_price){
+		int result =0;
+		try {
+			Statement s = connection.createStatement();
+			result = s.executeUpdate("UPDATE Provision SET price="+new_price+" WHERE id_drink='"+id_drink+"'");
+			if (result > 0) return true; else return false;
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	/**
 	 * Gives the id of an article
 	 * @param name
 	 * @return the id if all the ok and -1 otherwise.
 	 */
-	public int getProvisonId (String name){
+	public int getProvisionId (String name){
 		try {
 			Statement s = connection.createStatement();
 			ResultSet rs = s.executeQuery("SELECT id_drink FROM Provision WHERE name='"+name+"'");
@@ -173,6 +207,22 @@ public class Database_Functions {
 		catch (SQLException e) {
 			e.printStackTrace();
 			return -1;
+		}
+	}
+	/**
+	 * Create drinks available.
+	 * @return Boolean
+	 */
+	public boolean newProvision(int id, String name, float price) {
+		try {
+			Statement s = connection.createStatement();
+			int result = 0;
+			result = s.executeUpdate("INSERT INTO Provision VALUES("+id+",'"+name+"',"+price+")");
+			if (result > 0) return true; else return false;
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return false;
 		}
 	}
 	
@@ -216,4 +266,28 @@ public class Database_Functions {
 			return false;
 		}
 	}
+
+
+	public ArrayList<String[]> getSales() {
+		try {
+			ArrayList<String[]> prov = new ArrayList<String[]>();
+			Statement s = connection.createStatement();
+			ResultSet rs = s.executeQuery("SELECT * FROM sales");
+			while (rs.next()) {
+				prov.add(new String[]{rs.getString("id_sale").trim(),rs.getString("time").trim(), rs.getString("terminal").trim(), rs.getString("id_drink").trim(),rs.getString("quantity").trim(),rs.getString("id_user").trim()});
+				System.out.println(prov.toString());
+			}
+			return prov;
+		}
+		catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+
+
+
+
+
 }

@@ -8,6 +8,9 @@ import java.util.Vector;
 import nfc.PCSC;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.ControlAdapter;
+import org.eclipse.swt.events.ControlEvent;
 import org.eclipse.swt.events.FocusEvent;
 import org.eclipse.swt.events.FocusListener;
 import org.eclipse.swt.events.MouseAdapter;
@@ -41,7 +44,7 @@ public class Gui {
 	private Composite add_new_user_composite;
 	private Composite pay_composite;
 	private Composite check_composite;
-	private Composite stock_composite;
+	private Composite control_composite;
 	
 	/**
 	 * Launch the application.
@@ -379,14 +382,14 @@ public class Gui {
 		text.setLayoutData(getGridData());
 		
 		Label label_1 = new Label(check_composite, SWT.NONE);
-		label.setText("Last Name");
+		label_1.setText("Last Name");
 		label_1.setLayoutData(getGridData());
 		
 		final Text text_2 = new Text(check_composite, SWT.BORDER);
 		text_2.setLayoutData(getGridData());
 		
 		Label label_2 = new Label(check_composite, SWT.NONE);
-		label.setText("Amount");
+		label_2.setText("Amount");
 		label_2.setLayoutData(getGridData());
 		
 		final Text text_1 = new Text(check_composite, SWT.BORDER);
@@ -398,12 +401,15 @@ public class Gui {
 		
 		new Label(check_composite, SWT.NONE);
 		
-		String rfid = "6";//pcsc.getUid();
+		String rfid = pcsc.getUid();
 		Vector<String> user = database.getUserFromRfid(rfid);
 		System.out.println(user.toString());
 		if (user.size()>0){
+			System.out.println(user.get(1));
 			text.setText(user.get(1));
+			System.out.println(user.get(2));
 			text_2.setText(user.get(2));
+			System.out.println(user.get(0));
 			text_1.setText(user.get(0));
 		}else{
 			text.setText("Unknown User");
@@ -433,21 +439,20 @@ public class Gui {
 	    pay_composite.setLayout(gridLayout);
 		
 	    //affichage de l'user avant
-		Vector<String> user = database.getUserFromRfid("6");//pcsc.getUid()); 
+		Vector<String> user = database.getUserFromRfid(pcsc.getUid()); 
 		if (user.size()>0){
 			String amount = user.get(0);
 			String firstname = user.get(1);
 			String lastname = user.get(2);
 
-			
-			Label uid_label = new Label(pay_composite, SWT.NONE);
-			uid_label.setText("6"/*pcsc.getUid()*/);
 			Label firstname_label = new Label(pay_composite, SWT.NONE);
 			firstname_label.setText(firstname);
 			Label lastname_label = new Label(pay_composite, SWT.NONE);
-			firstname_label.setText(lastname);
+			lastname_label.setText(lastname);
+			Label uid_label = new Label(pay_composite, SWT.NONE);
+			uid_label.setText(pcsc.getUid());
 			Label amount_label = new Label(pay_composite, SWT.NONE);
-			firstname_label.setText(amount);
+			amount_label.setText(amount);
 			
 		}else{
 			new Label(pay_composite, SWT.NONE);
@@ -456,6 +461,13 @@ public class Gui {
 			Button getUID = new Button(pay_composite, SWT.NONE);
 			getUID.setText("Get User ID");
 			//event Handler
+			getUID.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseDoubleClick(MouseEvent e) {
+					createContents("pay");
+				}
+			});
+
 			
 	
 		}
@@ -544,7 +556,7 @@ public class Gui {
 				// TODO Récuperer le rfid, vérifier si le mec a assez, soustraire au compte, ajouter un log dans la base.
 				
 				//rfid
-				String rfid = "6";//pcsc.getUid();
+				String rfid = pcsc.getUid();
 				//Amount on the user account
 				float amount = database.getAmount(rfid);
 				//Total à payer
@@ -559,14 +571,14 @@ public class Gui {
 					//pour chaque boisson
 					for (int k = listsize-3;k>=0;k--){
 						// si la quantité n'est pas nulle
-						if (((Spinner)list.get(k)[2]).getText()!="0"){
+						if (Integer.parseInt(((Spinner)list.get(k)[2]).getText())!=0){
 							//on recupere la quantité
 							int quantity = Integer.parseInt(((Spinner)list.get(k)[2]).getText());
 							//on recupere la boisson
 							String boisson = ((Label)list.get(k)[0]).getText();
 							// on recupere l'id de la boisson
-							int id_provision = database.getProvisonId(boisson);
-							
+							int id_provision = database.getProvisionId(boisson);
+							System.out.println("add Sale : "+time+",1,"+id_provision+","+quantity+","+rfid);
 							database.addSale(time, 1, id_provision, quantity,rfid);
 							
 						}
@@ -590,7 +602,223 @@ public class Gui {
 }	
 
 	private void createStockContent(Shell shell2) {
-	stock_composite = new Composite(shell2, SWT.NONE);
+	control_composite = new Composite(shell2, SWT.NONE);
+	FillLayout fillLayout = new FillLayout();
+	fillLayout.type = SWT.VERTICAL;
+	control_composite.setLayout(fillLayout);
+	
+	Composite composite23 = new Composite(control_composite, SWT.NONE);
+	GridLayout gridLayout = new GridLayout(2, false);
+	gridLayout.marginWidth = 10;
+	gridLayout.marginHeight = 10;
+    gridLayout.horizontalSpacing = 10;
+    gridLayout.verticalSpacing = 10;
+    composite23.setLayout(gridLayout);
+    
+    
+	Composite provision_composite = new Composite(composite23, SWT.BORDER);
+	gridLayout = new GridLayout(4, false);
+	gridLayout.marginWidth = 10;
+	gridLayout.marginHeight = 10;
+	provision_composite.setLayout(gridLayout);
+	
+	ArrayList<String[]> data = database.getProvision();
+	// 2 pour chaque tableau
+	int datasize = data.size();
+	final ArrayList<Object[]> list = new ArrayList<Object[]>();
+
+	for (int i=0;i<datasize;i++){
+		String[] provision = data.get(i); //provision[0] : boisson ; provision[1]: price;
+		final Object[] tab =  new Object[4];
+		final String id = String.valueOf(database.getProvisionId(provision[0]));
+		tab[0] = new Text (provision_composite, SWT.CENTER);
+		((Text) tab[0]).setText(id);
+		((Text) tab[0]).setLayoutData(getGridData());
+			
+		tab[1] = new Label(provision_composite, SWT.CENTER);
+		((Label) tab[1]).setText(provision[0]);
+		((Label) tab[1]).setLayoutData(getGridData());
+		
+		tab[2] = new Text(provision_composite, SWT.CENTER);
+		((Text) tab[2]).setText(provision[1]);
+		((Text) tab[2]).setLayoutData(getGridData());
+		
+		tab[3] = new Button(provision_composite, SWT.BORDER);
+		((Button) tab[3]).setText("Change");
+		((Button) tab[3]).setLayoutData(getGridData());
+		list.add(tab);
+		
+		((Button) tab[3]).addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				//Appel base de donnée setPrice(provision_id);
+				int id_drink = Integer.parseInt(id);
+				float new_price = Float.parseFloat(((Text) tab[2]).getText());
+				database.setPrice(id_drink, new_price);
+				System.out.println("price changed");
+				createContents("stock");
+			}
+		});
+		
+	}
+	final Text idtext = new Text (provision_composite, SWT.CENTER);
+	idtext.setText("id");
+	idtext.setLayoutData(getGridData());
+		
+	final Text addname = new Text(provision_composite, SWT.CENTER);
+	addname.setText("name");
+	addname.setLayoutData(getGridData());
+	
+	final Text addprice = new Text(provision_composite, SWT.CENTER);
+	addprice.setText("price");
+	addprice.setLayoutData(getGridData());
+	
+	Button addnew = new Button(provision_composite, SWT.BORDER);
+	addnew.setText("Add New");
+	addnew.setLayoutData(getGridData());
+	
+	addnew.addMouseListener(new MouseAdapter() {
+		@Override
+		public void mouseDoubleClick(MouseEvent e) {
+			//Appel base de donnée setPrice(provision_id);
+			int id = Integer.parseInt(idtext.getText());
+			String name = addname.getText();
+			float price = Float.parseFloat(addprice.getText());
+			database.newProvision(id,name, price);
+			System.out.println("provision added");
+			createContents("stock");
+		}
+	});
+
+    
+	
+	
+	final ScrolledComposite scrolluser = new ScrolledComposite(composite23, SWT.V_SCROLL|SWT.BORDER);
+	scrolluser.setLayoutData(getGridData());
+	
+	Composite users_composite = new Composite(scrolluser, SWT.NONE);
+	gridLayout = new GridLayout(5, false);
+	gridLayout.marginWidth = 10;
+	gridLayout.marginHeight = 10;
+	users_composite.setLayout(gridLayout);
+
+	
+	//appel base de données
+	ArrayList<String[]> users = database.getUsers();
+	// 2 pour chaque tableau
+	int userssize = users.size();
+	
+	for (int i=0;i<userssize;i++){
+		final String[] user = users.get(i); //user[0] : id ; user[1]: amount; user[2] : firstname ; user[3]: lastname;
+		final Object[] tab =  new Object[5];
+		
+		tab[0] = new Label(users_composite, SWT.CENTER);
+		((Label) tab[0]).setText("UID"+user[0]);
+		((Label) tab[0]).setLayoutData(getGridData());
+			
+		tab[1] = new Label(users_composite, SWT.CENTER);
+		((Label) tab[1]).setText(user[1]+" SEK");
+		((Label) tab[1]).setLayoutData(getGridData());
+		
+		tab[2] = new Label(users_composite, SWT.CENTER);
+		((Label) tab[2]).setText(user[2]);
+		((Label) tab[2]).setLayoutData(getGridData());
+		
+		tab[3] = new Label(users_composite, SWT.CENTER);
+		((Label) tab[3]).setText(user[3]);
+		((Label) tab[3]).setLayoutData(getGridData());
+		
+		tab[4] = new Button(users_composite, SWT.BORDER);
+		((Button) tab[4]).setText("Delete");
+		((Button) tab[4]).setLayoutData(getGridData());
+		list.add(tab);
+		
+		((Button) tab[4]).addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				if (database.deleteUser(user[0])){
+					System.out.println("User Deleted");
+					createContents("stock");
+				}else{
+					System.out.println("Impossible to delete this user. He has already pay something!");
+				}
+			}
+		});
+		
+	}
+	scrolluser.setContent(users_composite);
+	scrolluser.setExpandVertical(true);
+	scrolluser.setExpandHorizontal(true);
+
+	scrolluser.addControlListener(new ControlAdapter() {
+	public void controlResized(ControlEvent e) {
+	Rectangle r = scrolluser.getClientArea();
+	scrolluser.setMinSize(scrolluser.getParent().computeSize(r.width, SWT.DEFAULT));
+	}
+	});
+	
+
+	final ScrolledComposite scrolllog = new ScrolledComposite(control_composite, SWT.V_SCROLL|SWT.BORDER);
+	scrolllog.setLayoutData(getGridData());
+	
+	Composite log_composite = new Composite(scrolllog, SWT.NONE);
+	gridLayout = new GridLayout(6, false);
+	gridLayout.marginWidth = 10;
+	gridLayout.marginHeight = 10;
+	log_composite.setLayout(gridLayout);
+	
+	//appel base de données
+		ArrayList<String[]> logs = database.getSales();
+		// 2 pour chaque tableau
+		int salessize = logs.size();
+		
+		for (int i=0;i<salessize;i++){
+			String[] log = logs.get(i); //log[0]:id_sale; log[1]: time; log[2] : terminal ; log[3]: id_drink; log[4] : quantity ; log[5]: id_user;
+			Object[] tab =  new Object[6];
+			
+			tab[0] = new Label(log_composite, SWT.CENTER);
+			((Label) tab[0]).setText("id sale "+log[0]+"                                 ");
+				
+			tab[1] = new Label(log_composite, SWT.CENTER);
+			((Label) tab[1]).setText("Time of transaction  : "+log[1]+"                              ");
+			
+			tab[2] = new Label(log_composite, SWT.CENTER);
+			((Label) tab[2]).setText("Terminal "+log[2]+"                              ");
+			
+			tab[3] = new Label(log_composite, SWT.CENTER);
+			((Label) tab[3]).setText("Id_Provision : "+log[3]+"                              ");
+			
+			tab[4] = new Label(log_composite, SWT.CENTER);
+			((Label) tab[4]).setText("Quantity : "+log[4]+"                              ");
+			
+			tab[5] = new Label(log_composite, SWT.CENTER);
+			((Label) tab[5]).setText("UserID"+log[5]+"                              ");
+		}
+		Button btnGetBackHom = new Button(log_composite, SWT.NONE);
+		btnGetBackHom.setText("<< Back Home <<");
+		
+		scrolllog.setContent(log_composite);
+		scrolllog.setExpandVertical(true);
+		scrolllog.setExpandHorizontal(true);
+
+		btnGetBackHom.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseDoubleClick(MouseEvent e) {
+				createContents("home");
+			}
+		});
+
+		
+/*		scrolllog.addControlListener(new ControlAdapter() {
+		public void controlResized(ControlEvent e) {
+		Rectangle r = scrolllog.getClientArea();
+		scrolllog.setMinSize(scrolllog.getParent().computeSize(r.width, SWT.DEFAULT));
+		}
+		});*/
+	
+	
+	
+	
 	
 }
 

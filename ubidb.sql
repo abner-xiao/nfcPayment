@@ -25,6 +25,6 @@ CREATE TABLE sales (
     quantity int,
 	id_user char(128),
 	primary key(id_sale),
-	foreign key(id_drink) references Provision(id_drink) on delete restrict on update CASCADE,
-	foreign key(id_user) references Users(id_user) on delete restrict on update CASCADE
+	foreign key(id_drink) references Provision(id_drink) on delete set null on update CASCADE,
+	foreign key(id_user) references Users(id_user) on delete set null on update CASCADE
 )
