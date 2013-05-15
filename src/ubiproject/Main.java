@@ -11,11 +11,11 @@ public class Main {
 		// TODO Auto-generated method stub
 		System.out.println("Hello jacob");
 		// New thread for RFID Reader
-		PCSC pcsc = new PCSC();
-		pcsc.start();
+		//PCSC pcsc = new PCSC();
+		//pcsc.start();
 		//New thread for GUI
 		@SuppressWarnings("unused")
-		Gui gui = new Gui(pcsc);		
+		Gui gui = new Gui(new PCSC());		
 	}
 
 }

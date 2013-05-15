@@ -198,6 +198,7 @@ public class PCSC extends Thread{
 					System.out.println("UID : "+this.byteArrayToHexString((data)));
 					this.UID = this.byteArrayToHexString(data);
 					System.out.println("this.UID = "+this.getUid());
+					System.out.println("Thread nb "+this.currentThread());
 				}
 				ct.waitForCardAbsent(0);
 				System.out.println("Card removed");

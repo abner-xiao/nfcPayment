@@ -51,7 +51,10 @@ public class Gui {
 	 * @param args
 	 */
 	public Gui(PCSC pcsc) {
-		this.pcsc = pcsc;
+		this.pcsc = new PCSC();
+		System.out.println("pcsc "+pcsc.currentThread());
+		pcsc.start();
+		System.out.println("pcsc "+pcsc.getId());
 		this.database = new Database_Functions();
 		
 		try {
@@ -403,6 +406,7 @@ public class Gui {
 				@Override
 				public void mouseDoubleClick(MouseEvent e) {
 					String rfid = pcsc.getUid();
+					System.out.println("UID from GUI = "+pcsc.getUid());
 					if (rfid == null){
 						txtRfid.setText("No UID detected");
 					}else{
