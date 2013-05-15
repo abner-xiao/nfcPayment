@@ -215,8 +215,8 @@ public class PCSC extends Thread{
 	public void run() {
 		// TODO Auto-generated method stub
 
-		PCSC pcsc = new PCSC();
-		CardTerminal ct = pcsc.selectCardTerminal();
+		//PCSC pcsc = new PCSC();
+		CardTerminal ct = this.selectCardTerminal();
 		Card c = null;
 		if(ct != null)
 		{
@@ -246,7 +246,7 @@ public class PCSC extends Thread{
 				e.printStackTrace();
 			}*/
 			try {
-				pcsc.establishConnection(ct); //lauch the method checking if a card is here
+				this.establishConnection(ct); //lauch the method checking if a card is here
 			} catch (CardException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

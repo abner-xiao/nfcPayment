@@ -15,7 +15,7 @@ public class Main {
 		//pcsc.start();
 		//New thread for GUI
 		@SuppressWarnings("unused")
-		Gui gui = new Gui(new PCSC());		
+		Gui gui = new Gui();		
 	}
 
 }

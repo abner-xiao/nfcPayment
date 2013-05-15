@@ -50,11 +50,9 @@ public class Gui {
 	 * Launch the application.
 	 * @param args
 	 */
-	public Gui(PCSC pcsc) {
+	public Gui() {
 		this.pcsc = new PCSC();
-		System.out.println("pcsc "+pcsc.currentThread());
 		pcsc.start();
-		System.out.println("pcsc "+pcsc.getId());
 		this.database = new Database_Functions();
 		
 		try {
