@@ -75,9 +75,9 @@ public class Gui {
 		shell = new Shell();
 		shell.setSize(400, 300);
 		shell.setMinimumSize(400, 300);
-		shell.setText("SWT Application " + name);
+		shell.setText("NFC Payment Solution ");
 		shell.setLayout(new FillLayout(SWT.HORIZONTAL));
-		
+
 		createContents("home");
 
 		Monitor primary = display.getPrimaryMonitor();

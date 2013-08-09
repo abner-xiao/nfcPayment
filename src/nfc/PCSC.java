@@ -26,7 +26,7 @@ public class PCSC extends Thread{
 	private byte[] atr = null;
 	private String protocol = null;
 	private byte[] historical = null;
-	private String UID = "";
+	private String UID;
 
 	public PCSC() {
 
@@ -197,8 +197,6 @@ public class PCSC extends Thread{
 					data = Arrays.copyOfRange(data, 0x08, data.length);
 					System.out.println("UID : "+this.byteArrayToHexString((data)));
 					this.UID = this.byteArrayToHexString(data);
-					System.out.println("this.UID = "+this.getUid());
-					System.out.println("Thread nb "+this.currentThread());
 				}
 				ct.waitForCardAbsent(0);
 				System.out.println("Card removed");
